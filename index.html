@@ -1,0 +1,152 @@
+!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Login Authentication System</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background: linear-gradient(135deg, #89f7fe, #66a6ff);
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: 0;
+    }
+    .container {
+        background: #fff;
+        border-radius: 10px;
+        padding: 30px 40px;
+        box-shadow: 0 0 15px rgba(0,0,0,0.2);
+        width: 320px;
+        text-align: center;
+    }
+    h2 {
+        color: #333;
+        margin-bottom: 20px;
+    }
+    input {
+        width: 90%;
+        padding: 10px;
+        margin: 10px 0;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+    }
+    button {
+        background-color: #007bff;
+        color: white;
+        border: none;
+        padding: 10px 15px;
+        border-radius: 5px;
+        cursor: pointer;
+        width: 100%;
+    }
+    button:hover {
+        background-color: #0056b3;
+    }
+    .msg {
+        color: red;
+        margin-top: 10px;
+    }
+    #dashboard {
+        display: none;
+    }
+</style>
+</head>
+<body>
+
+<div class="container" id="login-page">
+    <h2>Login</h2>
+    <input type="text" id="login-username" placeholder="Enter Username"><br>
+    <input type="password" id="login-password" placeholder="Enter Password"><br>
+    <button onclick="login()">Login</button>
+    <p class="msg" id="login-msg"></p>
+    <p>Don’t have an account? <a href="#" onclick="showRegister()">Create one</a></p>
+</div>
+
+<div class="container" id="register-page" style="display:none;">
+    <h2>Create Account</h2>
+    <input type="text" id="reg-username" placeholder="Create Username"><br>
+    <input type="password" id="reg-password" placeholder="Create Password"><br>
+    <button onclick="register()">Register</button>
+    <p class="msg" id="register-msg"></p>
+    <p>Already have an account? <a href="#" onclick="showLogin()">Login</a></p>
+</div>
+
+<div class="container" id="dashboard">
+    <h2>Welcome to Dashboard</h2>
+    <button onclick="logout()">Logout</button>
+</div>
+
+<script>
+    function showRegister() {
+        document.getElementById('login-page').style.display = 'none';
+        document.getElementById('register-page').style.display = 'block';
+    }
+
+    function showLogin() {
+        document.getElementById('register-page').style.display = 'none';
+        document.getElementById('login-page').style.display = 'block';
+    }
+
+    function register() {
+        const username = document.getElementById('reg-username').value;
+        const password = document.getElementById('reg-password').value;
+        const msg = document.getElementById('register-msg');
+
+        if (username === "" || password === "") {
+            msg.textContent = "Please fill all fields!";
+            msg.style.color = "red";
+            return;
+        }
+
+        localStorage.setItem("username", username);
+        localStorage.setItem("password", password);
+
+        msg.textContent = "Account created successfully!";
+        msg.style.color = "green";
+
+        setTimeout(() => {
+            showLogin();
+            msg.textContent = "";
+        }, 1500);
+    }
+
+    function login() {
+        const username = document.getElementById('login-username').value;
+        const password = document.getElementById('login-password').value;
+        const msg = document.getElementById('login-msg');
+
+        const savedUser = localStorage.getItem("username");
+        const savedPass = localStorage.getItem("password");
+
+        if (username === savedUser && password === savedPass) {
+            msg.style.color = "green";
+            msg.textContent = "Login successful!";
+            setTimeout(() => {
+                showDashboard();
+            }, 1000);
+        } else {
+            msg.style.color = "red";
+            msg.textContent = "Login failed! Invalid username or password.";
+        }
+    }
+
+    function showDashboard() {
+        document.getElementById('login-page').style.display = 'none';
+        document.getElementById('register-page').style.display = 'none';
+        document.getElementById('dashboard').style.display = 'block';
+    }
+
+    function logout() {
+        document.getElementById('dashboard').style.display = 'none';
+        document.getElementById('login-page').style.display = 'block';
+        document.getElementById('login-msg').textContent = "";
+        document.getElementById('login-username').value = "";
+        document.getElementById('login-password').value = "";
+    }
+</script>
+
+</body>
+</html>
